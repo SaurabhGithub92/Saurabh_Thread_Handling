@@ -47,12 +47,12 @@ public class SingletonLogger
 {
     public string Message { get; private set; }
 
-    // Defer iinstantiation until the instance is requested using Lazy<T>
-    /* private static readonly Lazy<SingletonLogger> instance =
+    // Defer instantiation until the instance is requested using Lazy<T>
+    private static readonly Lazy<SingletonLogger> instance =
          new Lazy<SingletonLogger>(() => new SingletonLogger());
-    */
+    
 
-    private static readonly SingletonLogger instance = new SingletonLogger();
+    //private static readonly SingletonLogger instance = new SingletonLogger();
 
     // Private constructor to prevent initialization
     private SingletonLogger()
@@ -66,7 +66,7 @@ public class SingletonLogger
     {
         get
         {
-            return instance;
+            return instance.Value;
         }
     }
 
