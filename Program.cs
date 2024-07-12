@@ -29,17 +29,46 @@ public class Program
         /*
          Asynchronous stream got introduced in C#8.0, which allow you to consume asynchronous
             sequences using the IAsyncEnumerable<T> and await foreach
-         await ConsumeAsync();
+
+        await ConsumeAsync();
          */
 
         /*
          Parallel Asynchronous operations
         You can run multiple asynchronous operations in parallel using Task.WhenAll or Task.WhenAny
-         */
+         
         await RunMultipleTasksAsync();
+         */
+
+        /*
+         LINQ with async await
+         */
+
+        
+        var urls = new List<string> {
+            "https://jsonplaceholder.typicode.com/posts/1",
+            "https://jsonplaceholder.typicode.com/posts/20",
+            "https://jsonplaceholder.typicode.com/posts/30"
+        };
+
+        //Performs async LINQ Query
+        var dataTasks = urls.Select(async url =>
+        {
+            var data = await DataFetcherAsync.FetchDataAsync(url);
+            return new { Url = url, Data = data };
+        });
+
+        var results = await Task.WhenAll(dataTasks);
+
+        //Process the result
+        foreach(var result in results)
+        {
+            Console.WriteLine($"Fetching data from: {result.Url} ");
+            Console.WriteLine($"Fetched Data: {result.Data.Substring(0, 100)}\n");
+        }
+
         Console.ReadKey();
     }
-
     public async static Task RunMultipleTasksAsync()
     {
         var task1 = ConsumeAsync();
@@ -73,6 +102,17 @@ public class Program
         await Task.Delay(2000); // Simulate delay for 2 seconds
         Console.WriteLine("Task Finished.");
         return 42;
+    }
+}
+
+public class DataFetcherAsync
+{
+    private static readonly HttpClient httpClient = new HttpClient();
+
+    public async static Task<string> FetchDataAsync(string url)
+    {
+        await Task.Delay(1000);
+        return await httpClient.GetStringAsync(url);
     }
 }
 
