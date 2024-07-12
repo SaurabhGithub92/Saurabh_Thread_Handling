@@ -4,6 +4,7 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
+        /*
         try
         {
             Console.WriteLine("Starting async task...");
@@ -14,6 +15,7 @@ public class Program
             Console.WriteLine($"Exception caught: {ex.Message}");
         }
 
+        
         //Usage of static class
         Logger.Log("This ia s log message from Logger Static class & Static Log method");
 
@@ -22,8 +24,47 @@ public class Program
         singletonLogger.LogMessage();
         singletonLogger.UpdateLogMessage("Updated text.");
         singletonLogger.LogMessage();
+        */
 
+        /*
+         Asynchronous stream got introduced in C#8.0, which allow you to consume asynchronous
+            sequences using the IAsyncEnumerable<T> and await foreach
+         await ConsumeAsync();
+         */
+
+        /*
+         Parallel Asynchronous operations
+        You can run multiple asynchronous operations in parallel using Task.WhenAll or Task.WhenAny
+         */
+        await RunMultipleTasksAsync();
         Console.ReadKey();
+    }
+
+    public async static Task RunMultipleTasksAsync()
+    {
+        var task1 = ConsumeAsync();
+        var task3 = Task.Delay(2000);
+        var task4 = Task.Delay(4000);
+
+        await Task.WhenAll(task1, task3, task4);
+        Console.WriteLine("All the tasks are completed.");
+    }
+
+    public async static IAsyncEnumerable<int> GetNumbersAsync()
+    {
+        for(int i=1; i<=5; i++)
+        {
+            await Task.Delay(1000);
+            yield return i;
+        }
+    }
+
+    public async static Task ConsumeAsync()
+    {
+        await foreach(var number in GetNumbersAsync())
+        {
+            Console.WriteLine(number);
+        }
     }
 
     public async static Task<int> PerformAsyncTask()
