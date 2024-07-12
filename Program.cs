@@ -60,8 +60,12 @@ public class Program
 
         var results = await Task.WhenAll(dataTasks);
 
+        //Oredering the results using LINQ based on Length of Data
+        var orderedResults = results.OrderByDescending(result => result.Data.Length);
+
+
         //Process the result
-        foreach(var result in results)
+        foreach(var result in orderedResults)
         {
             Console.WriteLine($"Fetching data from: {result.Url} ");
             Console.WriteLine($"Fetched Data: {result.Data.Substring(0, 100)}\n");
